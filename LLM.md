@@ -19,12 +19,19 @@ layout, and animations are unchanged.
 
 ## Deploy
 
-Cloudflare Pages, project `yotoda`, custom domains `yotoda.tech` + `www.yotoda.tech`.
+Cloudflare **Worker with static assets** (the account's Pages project limit was
+reached, so we use the same mechanism that serves 7stars.dev). Config in
+`wrangler.toml`: assets from `./dist`, SPA fallback via
+`not_found_handling = "single-page-application"`.
 
-    wrangler pages deploy dist --project-name yotoda --branch main
+    wrangler deploy
 
-`dist/` is served directly. SPA fallback (unknown paths → `index.html`) is handled
-by Pages' `_redirects`.
+Auth: `CLOUDFLARE_EMAIL` + `CLOUDFLARE_API_KEY` (global key) or a scoped token.
+Custom domains `yotoda.tech` + `www.yotoda.tech` are bound to the `yotoda` Worker
+(Workers → Domains). Public resolution requires the yotoda.tech registrar
+nameservers to be delegated to Cloudflare — a one-time registrar action.
+
+Default deploy URL: https://yotoda.zeekay.workers.dev
 
 ## Structure
 
@@ -33,4 +40,3 @@ by Pages' `_redirects`.
       favicon.svg                # star-cluster mark
       assets/index-*.js          # React app bundle (all copy inlined)
       assets/index-*.css         # styles
-      _redirects                 # SPA fallback for Pages
